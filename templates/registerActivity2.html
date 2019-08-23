@@ -1,5 +1,4 @@
-<html>
-    <head>
+{% block content %}
         <script type = "text/javascript" 
             src = "{{ url_for('static', filename = 'hello.js') }}" ></script>
         <script type="text/javascript">
@@ -11,9 +10,7 @@
                     element.style.display='none';
             }
         </script>
-    </head>
 
-    <body>
         <div align="center">
         <form>
             <br>Activity<select name="activity" onchange="extraOption(this.value);">
@@ -34,6 +31,4 @@
             <br><textarea rows="4" cols="50"></textarea></br>
             <br><input type="submit" value="Submit"/></br>
             </form> </div>
-            <input type = "button" onclick = "sayHello()" value = "Say Hello" />
-    </body>
-</html>
+{% endblock %}

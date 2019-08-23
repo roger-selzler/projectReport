@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Project Progress Report</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <div > 
+            <div class="divMenuLeft">
+                <a href="/">Home</a> &nbsp;
+                <!--<a href="mailto:contact@example.com"></a>-->
+                {% block menuRegisteredUser %}{% endblock %}
+                {% block menuAdmin %}{% endblock %}
+            </div>
+            <div class="divMenuRight">
+                <a href={{ url_for('user.login') }}>Sign in</a>
+            </div>
+        </div>
+        </p>
+        {% block content %}{% endblock %}
+        <p align="center">&copy; 2019 - Roger Selzler</p>
+
+    </body>
+</html>

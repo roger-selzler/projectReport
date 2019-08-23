@@ -1,0 +1,14 @@
+html { font-family: sans-serif; background: #eee; padding: 1rem; }
+body { max-width: 960px; margin: 0 auto; background: white; }
+
+.divMenuLeft{
+    float: left;
+    width: 70%;
+}
+
+.divMenuRight{
+    float: right;
+    width: 30%;
+    text-align:center
+}
+

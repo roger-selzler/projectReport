@@ -5,7 +5,7 @@ sudo apt-get -y install virtualenv
 
 virtualenv /venv
 source /venv/bin/activate
-pip install flask
+pip install flask flask-user Flask-MongoEngine
 
 
 
@@ -15,7 +15,7 @@ echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/
 
 sudo apt-get update
 sudo apt-get install -y mongodb-org 
-
+sudo service mongod start
 
 
 # -- add autocompletion functionalities for vim
