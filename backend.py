@@ -95,12 +95,12 @@ def getAssignedGroupUser(username):
 def assignGroup(username,group):
     assignedGroups = prjdb.assignedGroups
     aGrp = assignedGroups.find_one(dict(username=username))
-    #print(aGrp['_id'])
-    print(aGrp)
     if aGrp == None:
         assignedGroups.insert_one(dict(username=username,group=group))
     else:
         assignedGroups.update_one(dict(_id=aGrp['_id']),{"$set":dict(username=username,group=group)},upsert=False)
+    aGrp = assignedGroups.find_one(dict(username=username))
+    print(aGrp)
 
 def listAssignedGroups():
     assignedGroups=prjdb.assignedGroups

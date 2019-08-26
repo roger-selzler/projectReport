@@ -136,8 +136,13 @@ def create_app():
             if userGroup['group'] not in groups:
                 groups.append(userGroup['group'])
         print(users)
+        #request.get_json()
         if request.method == 'POST':
             print("there was a post request")
+            username = request.form['username']
+            group = request.form['group']
+            print(username + "  " + group)
+            backend.assignGroup(username,group)
         return render_template('assignGroups.html',users = users,groups=groups)
 
     return app
