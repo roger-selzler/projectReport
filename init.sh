@@ -1,10 +1,11 @@
 #!/bin/bash
+set -e # stop on first error.
 sudo apt-get -y install python-pip
 pip install virtualenv
 sudo apt-get -y install virtualenv
 
-virtualenv /venv
-source /venv/bin/activate
+sudo virtualenv /prjvenv
+source /prjvenv/bin/activate
 pip install flask flask-user Flask-MongoEngine
 
 

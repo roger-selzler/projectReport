@@ -9,13 +9,27 @@
             <div class="divMenuLeft">
                 <a href="/">Home</a> &nbsp;
                 <!--<a href="mailto:contact@example.com"></a>-->
-                {% block menuRegisteredUser %}{% endblock %}
-                {% block menuAdmin %}{% endblock %}
+                {% block menuRegisteredUser %}
+                    {% if current_user.is_authenticated%}
+                    <a href="/registerActivity">Register Activity</a>
+                    <a href="/admin">Admin</a>
+                    
+                    {% endif %}
+                {% endblock %} 
+
+                
+                    {% block menuAdmin %}{% endblock %}
+                
             </div>
             <div class="divMenuRight">
-                <a href={{ url_for('user.login') }}>Sign in</a>
+                {% if current_user.is_authenticated%}
+                    <a href={{ url_for('user.logout') }}>Sign out</a>
+                {% else %}
+                    <a href={{ url_for('user.login') }}>Sign in</a>
+                {% endif %}
             </div>
         </div>
+        <br></br>
         </p>
         {% block content %}{% endblock %}
         <p align="center">&copy; 2019 - Roger Selzler</p>

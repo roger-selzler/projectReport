@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+        <div align="center">
+            <form method='POST' action=''>
+                Group name:<input type="TEXT" name="group" id="group"/>
+                <input type='submit' value='Create' />
+            </form>
+             <h3>Existing Groups:</h3>
+             {% for group in groups %}
+                <p> {{ group }} </p>
+                <!--br><a href='/admin/assignGroups'>Assign Groups</a></br-->
+            {% endfor %}
+           
+        </div>
+{% endblock %}

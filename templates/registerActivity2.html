@@ -1,10 +1,11 @@
+{% extends "layout.html" %}
 {% block content %}
         <script type = "text/javascript" 
             src = "{{ url_for('static', filename = 'hello.js') }}" ></script>
         <script type="text/javascript">
             function extraOption(val){
                 var element = document.getElementById("activityOther");
-                if (val=="other")
+                if (val=="Other")
                     element.style.display='block';
                 else
                     element.style.display='none';
@@ -12,23 +13,23 @@
         </script>
 
         <div align="center">
-        <form>
+        <form method="POST" action="">
             <br>Activity<select name="activity" onchange="extraOption(this.value);">
-                    <option value="problemDefinition">Problem Definition</option>
-                    <option value="generationOfIdeas">Generation of Ideas</option>                
-                    <option value="modeling">Modeling</option>
-                    <option value="feasabilityOfAnalysis">Feasability of Analysis</option>
-                    <option value="evaluation">Evaluation</option>
-                    <option value="decision">Decision</option>
-                    <option value="communication">Communication</option>
-                    <option value="implementation">Implementation</option>
-                    <option value="other">Other</option>
+                    <option value="Problem Definition">Problem Definition</option>
+                    <option value="Generation of Ideas">Generation of Ideas</option>                
+                    <option value="Modeling">Modeling</option>
+                    <option value="Feasability of Analysis">Feasability of Analysis</option>
+                    <option value="Evaluation">Evaluation</option>
+                    <option value="Decision">Decision</option>
+                    <option value="Communication">Communication</option>
+                    <option value="Implementation">Implementation</option>
+                    <option value="Other">Other</option>
                 </select>
                 <input type="TEXT" name="activityOther" id="activityOther" style='display:none;' /></br>
             <br>Task:<input type="TEXT" name="task" id="task"/></br>
-            <br>Hours:<input type="number" name="hours" id="hours" /></br>
+            <br>Hours:<input type="number" name="hours" id="hours" step=any></br>
             <br>Details:</br>
-            <br><textarea rows="4" cols="50"></textarea></br>
+            <br><textarea rows="4" cols="50" name="details"></textarea></br>
             <br><input type="submit" value="Submit"/></br>
             </form> </div>
 {% endblock %}

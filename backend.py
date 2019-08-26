@@ -4,20 +4,38 @@ import datetime
 client = MongoClient('localhost',27017)
 
 resetDB = False
-resetDB = True
+#resetDB = True
 if resetDB == True:
     client.drop_database('prjMngRpt')
 
 prjdb = client['prjMngRpt']
+dbUsers = client['projectReport']
 
+# functions to deal with users 
+def isAdmin(self,username):
+    return True #TODO 
+    
+def getUsernames():
+    usersCollection = dbUsers.user
+    users = []
+    for userX in usersCollection.find():
+        users.append(userX['username'])
+    for userX in users:
+        print(userX)
+    return users
+
+
+# functions to deal with the activities
 #prjdb.activities.drop()
-def insertActivity(author,group,activityName,task,hours):
+def insertActivity(author,activityName,task,hours,details):
     activities = prjdb.activities
+    group = getAssignedGroupUser(author)
     activity = dict(author=author,
             group=group,
             activity = activityName,
             task = task,
             hours = hours,
+            details = details,
             date = datetime.datetime.now())
     print(activity)
     post_id = activities.insert_one(activity).inserted_id
@@ -58,9 +76,11 @@ def getGroups():
     groups = prjdb.groups 
     groups = groups.find().sort("group")
     print ('Available Groups:')
+    g = []
     for i in groups:
+        g.append(i['group'])
         print(i['group'])
-    return groups
+    return g
 
 def getAssignedGroupUser(username):
     assignGroups = prjdb.assignedGroups
@@ -91,25 +111,30 @@ def listAssignedGroups():
 
 
 # ------ Tests
-insertActivity("rogerselzler","G1","management","editing papers",4)    
-insertActivity("rogerselzler","G2","management","editing papers one more time",22)
-insertActivity("CarlosSelzler","G4","Business","Selling to xxx",3.4)
-getActivities()
+if resetDB:
+    insertGroup('Ggg1')
+    insertGroup('Ggg22')
+    insertGroup('Ggg22')
+    getGroups()
+    
+    listAssignedGroups()
+    assignGroup('rogerselzler','Ggg1')
+    assignGroup('CarlosSelzler','Ggg21')
+    listAssignedGroups()
+    assignGroup('rogerselzler','Ggg12')
+    assignGroup('rogerselzler','Ggg221')
+    listAssignedGroups()
+    
+    insertActivity("rogerselzler","management","editing papers",4,"details1")    
+    insertActivity("rogerselzler","management","editing papers one more time",22,"details2")
+    insertActivity("CarlosSelzler","Business","Selling to xxx",3.4,"details3")
+    getActivities()
+    
+    
+    
+    updateGroupActivity('rogerselzler',getAssignedGroupUser('rogerselzler'))
+    getActivities()
 
 
 
-insertGroup('Ggg1')
-insertGroup('Ggg22')
-insertGroup('Ggg22')
-getGroups()
 
-listAssignedGroups()
-assignGroup('rogerselzler','Ggg1')
-assignGroup('CarlosSelzler','Ggg21')
-listAssignedGroups()
-assignGroup('rogerselzler','Ggg12')
-assignGroup('rogerselzler','Ggg221')
-listAssignedGroups()
-
-updateGroupActivity('rogerselzler',getAssignedGroupUser('rogerselzler'))
-getActivities()

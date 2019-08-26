@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+<div align="center">
+    <script type="text/javascript">
+        function updateGroup(id){
+            alert(document.getElementById(id).id + document.getElementById(id).value); 
+        }
+    </script>
+
+    {% for user in users %}
+    <p> {{ user['username'] }}
+    <form method='POST'>
+        <select id={{ user['username'] }} onchange="updateGroup(this.id);">
+            {% for group in groups %}
+            <option value={{group}}>{{group}}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    </p>
+    <!--br><a href='/admin/assignGroups'>Assign Groups</a></br-->
+    {% endfor %}
+</div>
+{% endblock %}
