@@ -92,6 +92,8 @@ def create_app():
     @app.route('/registerActivity',methods=['GET', 'POST'])
     @login_required
     def registerActivityPage():
+        activities = backend.getActivitiesByUsername(current_user.username)
+        print(activities)
         if request.method == 'POST':
             author = current_user.username
             activity = request.form['activity']
@@ -104,7 +106,9 @@ def create_app():
             backend.insertActivity(author,activity,task,hours,details)
             print(type(hours))
             print(activity + task + hours + details)
-        return render_template('registerActivity2.html')
+            activities = backend.getActivitiesByUsername(current_user.username)
+            render_template('registerActivity2.html',activities=activities)
+        return render_template('registerActivity2.html',activities=activities)
 
     @app.route('/admin')
     @login_required

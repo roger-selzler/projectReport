@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e # stop on first error.
 sudo apt-get -y install python-pip
-pip install virtualenv
+sudo pip install virtualenv
 sudo apt-get -y install virtualenv
 
 sudo virtualenv /prjvenv
@@ -23,11 +23,11 @@ sudo service mongod start
 cd ~/ 
 sudo apt-get install curl vim exuberant-ctags git ack-grep
 sudo pip install pep8 flake8 pyflakes isort yapf 
-wget https://raw.github.com/fisadev/fisa-vim-config/master/.vimrc -O ~/.vimrc
+[ -f ~/.vimrc ] || wget https://raw.github.com/fisadev/fisa-vim-config/master/.vimrc -O ~/.vimrc
 vim -c :q! ~/.vimrc
 
 # Create autocompletion for python on bash shell
-[ -f ~/.pythonrc ] && echo "File ~/.pythonrc already exist" || touch ~/.pythonrc && echo "try:
+[ -f ~/.pythonrc ] && echo "File ~/.pythonrc already exist" || touch ~/.pythonrc && sudo echo "try:
     import readline
     import rlcompleter
     readline.parse_and_bind(\"tab: complete\")

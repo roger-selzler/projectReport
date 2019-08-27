@@ -54,6 +54,21 @@ def getActivities():
         print (" " )
     return listOfActivities
 
+def getActivitiesByUsername(username):
+    activities = prjdb.activities
+    listOfActivities = activities.find(dict(author=username)).sort("date",-1)
+    act = []
+    print('Activities by username')
+    for i in listOfActivities:
+        act.append(i)
+        if "author" in i:
+            print(i["author"])
+        if "group" in i:
+            print(str(i['date']) + ' ' + i["group"])
+            print(i['activity'])
+        print (" " )
+    return act
+
 def updateGroupActivity(username,group):
     activities = prjdb.activities
     listOfActivities = activities.find(dict(author=username))
