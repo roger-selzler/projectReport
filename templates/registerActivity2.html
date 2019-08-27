@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <script type = "text/javascript" 
-    src = "{{ url_for('static', filename = 'hello.js') }}" ></script>
+src = "{{ url_for('static', filename = 'hello.js') }}" ></script>
 <script type="text/javascript">
     function extraOption(val){
         var element = document.getElementById("activityOther");
@@ -35,9 +35,9 @@
 </div>
 
 <div>
-    <br><h2>List of activities</h2></br
+    <br><h2>List of activities</h2></br>
     {% for activity in activities %}
-    <p>{{ activity['date'] }}</p>
+    <p>{{ activity['date'] }} - {{ activity['group'] }}</p>
     <p>Activity: {{ activity['activity'] }}</p>
     <p>Task: {{ activity['task'] }} </p>
     <p>Hours: {{ activity['hours'] }} </p>

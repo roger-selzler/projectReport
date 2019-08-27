@@ -113,14 +113,13 @@ def create_app():
     @app.route('/admin')
     @login_required
     def adminPage():
-#        userData.getUsernames()
         return render_template('admin.html')
     
     @app.route('/admin/createGroups',methods=['GET','POST'])
     @login_required
     def createGroups():
         groups = backend.getGroups()
-        if request.method== 'POST':
+        if request.method == 'POST':
             group = request.form['group']
             backend.insertGroup(group)
             groups = backend.getGroups()
@@ -148,6 +147,23 @@ def create_app():
             print(username + "  " + group)
             backend.assignGroup(username,group)
         return render_template('assignGroups.html',users = users,groups=groups)
+
+    @app.route('/admin/viewGroupReport',methods=['GET','POST'])
+    @login_required
+    def viewGroupReportPage():
+        groups = backend.getGroups()
+        if len(groups)>0:
+            selectedGroup = groups[0]
+        activities = backend.getActivitiesByGroup(selectedGroup)
+        if request.method == 'POST':
+            selectedGroup = request.form['selectedGroup']
+            activities = backend.getActivitiesByGroup(selectedGroup)
+            activities = backend.getActivitiesByUsername(current_user.username)
+            print "there was a post request in viewGroupReport",selectedGroup
+            for activity in activities:
+                print(activity)
+            return render_template('viewGroupReport.html',activities = activities,groups = groups,selectedGroup = selectedGroup)
+        return render_template('viewGroupReport.html',activities = activities,groups = groups,selectedGroup = selectedGroup)
 
     return app
 

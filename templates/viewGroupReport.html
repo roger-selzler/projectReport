@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript">
+    function updateGroup(id){
+        var values = {"selectedGroup":document.getElementById(id).value};
+        $.post("viewGroupReport",values);
+    }
+</script>
+
+<div align="center">
+    <form method="POST" action="">
+        <br>Group:<select id="group" onchange="updateGroup(this.id);">
+            {% for group in groups %}
+            {% if group == selectedGroup%}
+            <option selected="{{group}}" >{{group}}</option>
+            {% else %}
+            <option value="{{group}}" >{{group}}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<div align="center">
+    <br><h2>List of activities</h2></br>
+    {% for activity in activities %}
+    <p>{{ activity['date'] }} - {{ activity['group'] }}</p>
+    <p>Activity: {{ activity['activity'] }}</p>
+    <p>Task: {{ activity['task'] }} </p>
+    <p>Hours: {{ activity['hours'] }} </p>
+    <p>Details: {{ activity['details'] }}</p>
+    <br></br>
+    <!--p>{{ activity['author']}} &nbsp; activity['activity'] &nbsp; activity['task'] &nbsp; activity['hours'] &nbsp; activity['details'] &nbsp; activity['date']   </p-->
+    {% endfor %}
+    <p>End of activity</p>
+</div>
+
+{% endblock %}
