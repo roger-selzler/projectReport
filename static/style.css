@@ -1,16 +1,88 @@
+:root{
+	--nav-color: #333;
+	--a-select-color: #222;
+	--a-menu-color: #f2f2f2 ;
+}
 html { font-family: sans-serif; background: #eee; padding: 1rem; }
 body { margin: 0 auto; background: white; }
 table, th, td {
-  border: 1px solid black;
+	border-collapse: collapse;
+	border: 0.1px solid black;
+	text-align: center;
 }
-.divMenuLeft{
-    float: left;
-    width: 70%;
+#navbar {
+	background-color: var(--nav-color);
+	overflow: hidden;
+}
+#navbar a{
+	float:left;
+	color: var(--a-menu-color);
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+}
+#navbar a:hover{
+	background-color: var(--a-select-color);
+	color: white;
+}
+#navbar a.active{
+	background-color: #4CAF50;
+	color: white;
 }
 
-.divMenuRight{
-    float: right;
-    width: 30%;
-    text-align:center
+.navbarRight{
+	float:right;
 }
 
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+
+.adminMenu {
+	height: 100%;
+	width: 120px;
+	position: fixed;
+	z-index: 1;
+	top: 20;
+	left: 16px;
+	background-color: var(--nav-color);
+	overflow-x: hidden;
+	padding-top: 20px;
+}
+
+.adminMenu a {
+	padding: 2px 2px 1px 2px;
+	text-decoration: none;
+	font-size: 14px;
+	color: var(--a-menu-color);
+	display: block;
+}
+
+.adminMenu a:hover{
+	/*background-color: var(--a-select-color);*/
+	color: #dddddd;
+}
+
+.adminMenu a.active{
+	color: white;
+}
+
+.adminMain {
+	margin-left: 160px;
+	padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .adminMenu {padding-top: 15px;}
+  .adminMenu a {font-size: 18px;}
+}
+
+
+
+
+
+/**/

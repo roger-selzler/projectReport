@@ -1,33 +1,34 @@
-{% extends "layout.html" %}
-{% block content %}
+{% extends "admin.html" %}
+{% block adminContent %}
 <div align="center">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script type="text/javascript">
         function updateGroup(id){
             var values = {"username":document.getElementById(id).id,
-                "group":document.getElementById(id).value};
+            "group":document.getElementById(id).value};
             //alert(document.getElementById(id).id + "  " + document.getElementById(id).value);
             //alert(json.loads({username:document.getElementById(id).id, group:document.getElementById(id).value})[0])
             $.post("assignGroups",values);
         }
     </script>
 
+    <div>Group Assignment</div>
     {% for user in users %}
-    <p> {{ user['username'] }}
-    <form method='POST'>
-        <select id={{ user['username'] }} onchange="updateGroup(this.id);">
-            {% for group in groups %}
-            {% if group == user['group']%}
-            <option selected="{{group}}" >{{group}}</option>
-            {% else %}
-            <option value="{{group}}" >{{group}}</option>
-            {% endif %}
+    <div>{{ user['username'] }}
+        <form method='POST'>
+            <select id={{ user['username'] }} onchange="updateGroup(this.id);">
+                {% for group in groups %}
+                {% if group == user['group']%}
+                <option selected="{{group}}" >{{group}}</option>
+                {% else %}
+                <option value="{{group}}" >{{group}}</option>
+                {% endif %}
 
-            {% endfor %}
-        </select>
-    </form>
+                {% endfor %}
+            </select>
+        </form>
 
-    </p>
+    </div>
     <!--br><a href='/admin/assignGroups'>Assign Groups</a></br-->
     {% endfor %}
 </div>

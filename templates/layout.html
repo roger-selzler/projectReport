@@ -1,38 +1,46 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Project Progress Report</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
-    <body>
-        <div > 
-            <div class="divMenuLeft">
-                <a href="/">Home</a> &nbsp;
-                <!--<a href="mailto:contact@example.com"></a>-->
-                {% block menuRegisteredUser %}
-                    {% if current_user.is_authenticated%}
-                    <a href="/registerActivity">Register Activity</a>
-                    <a href="/admin">Admin</a>
-                    
-                    {% endif %}
-                {% endblock %} 
+<head>
+	<title>Project Progress Report</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+	
+	<div id="navbar" >
+		<a href="/">Home</a>
+		<!--<a href="mailto:contact@example.com"></a>-->
+		{% block menuRegisteredUser %}
+		{% if current_user.is_authenticated%}
+		<a href="/registerActivity">Register Activity</a>
+		<a href="/admin">Admin</a>
+		{% endif %}
+		{% endblock %} 
+		{% block menuAdmin %}{% endblock %}
+		
+		<div class="navbarRight" >
+			{% if current_user.is_authenticated%}
+			<a href={{ url_for('user.logout') }}>Sign out</a>
+			{% else %}
+			<a href={{ url_for('user.login') }}>Sign in</a>
+			{% endif %}
+		</div>
 
-                
-                    {% block menuAdmin %}{% endblock %}
-                
-            </div>
-            <div class="divMenuRight">
-                {% if current_user.is_authenticated%}
-                    <a href={{ url_for('user.logout') }}>Sign out</a>
-                {% else %}
-                    <a href={{ url_for('user.login') }}>Sign in</a>
-                {% endif %}
-            </div>
-        </div>
-        <br></br>
-        </p>
-        {% block content %}{% endblock %}
-        <p align="center">&copy; 2019 - Roger Selzler</p>
+	</div>
+	<div>	{% block content %}{% endblock %} </div>
 
-    </body>
+	<div><p align="center">&copy; 2019 - Roger Selzler</p></div>
+
+	<script>
+		window.onscroll = function () {stickyFun()};
+		var navbar = document.getElementById("navbar");
+		var sticky = navbar.offsetTop;
+		function stickyFun(){
+			if(window.pageYOffset >= sticky){
+				navbar.classList.add("sticky");
+			} else {
+				navbar.classList.remove("sticky");
+			}
+		}
+	</script>
+</body>
 </html>

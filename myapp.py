@@ -113,7 +113,8 @@ def create_app():
     @app.route('/admin')
     @login_required
     def adminPage():
-        return render_template('admin.html')
+        return redirect(url_for('viewGroupReportPage'))
+        # return render_template('admin.html')
     
     @app.route('/admin/createGroups',methods=['GET','POST'])
     @login_required
@@ -156,8 +157,11 @@ def create_app():
             selectedGroup = groups[0]
         else :
             selectedGroup = ""
-        reportType = "week"
+        # reportOptions = ['Week','Username','Activity']
+        reportOptions = ['Week']
+        reportType = reportOptions[0]
         activities = backend.getActivitiesByGroup(selectedGroup)
+        activities = backend.organizeActivityForReport(activities,reportType)
         projectInfo = backend.getProjectInfo()
         print projectInfo
         print "creating viewGroupReportPage"
@@ -165,18 +169,22 @@ def create_app():
             selectedGroup = request.form['selectedGroup']
             reportType = request.form['reportType']
             activities = backend.getActivitiesByGroup(selectedGroup)
+            config = reportType
+            activities = backend.organizeActivityForReport(activities,config)
             print "there was a post request in viewGroupReport",selectedGroup,reportType
             return render_template( 'viewGroupReport.html',
                 activities = activities,
                 groups = groups,
                 selectedGroup = selectedGroup,
-                reportType = reportType)
+                reportType = reportType,
+                reportOptions=reportOptions)
             # return redirect(url_for('viewGroupReportPage',selectedGroup))
         return render_template('viewGroupReport.html',
             activities = activities,
             groups = groups,
             selectedGroup = selectedGroup,
-            reportType = reportType)
+            reportType = reportType,
+            reportOptions=reportOptions)
 
     return app
 

@@ -1,8 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
-        <div align="center">
-            <br><a href='/admin/createGroups'>Create Groups</a></br>
-            <br><a href='/admin/assignGroups'>Assign Groups</a></br>
-            <br><a href='/admin/viewGroupReport'>Reports</a></br>
-       </div>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<div class="adminMenu" align="center">
+	<br><a href='/admin/createGroups'>Create Groups</a></br>
+	<br><a href='/admin/assignGroups'>Assign Groups</a></br>
+	<br><a href='/admin/viewGroupReport'>Reports</a></br>
+</div>
+<div class="adminMain">
+	{% block adminContent %}
+	<p>No content for this page.</p>
+	{% endblock %}
+ 
+</div>
+
+
+
 {% endblock %}

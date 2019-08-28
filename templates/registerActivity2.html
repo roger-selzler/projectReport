@@ -3,47 +3,66 @@
 <script type = "text/javascript" 
 src = "{{ url_for('static', filename = 'hello.js') }}" ></script>
 <script type="text/javascript">
-    function extraOption(val){
-        var element = document.getElementById("activityOther");
-        if (val=="Other")
-            element.style.display='block';
-        else
-            element.style.display='none';
-    }
+	function extraOption(val){
+		var element = document.getElementById("activityOther");
+		if (val=="Other")
+			element.style.display='block';
+		else
+			element.style.display='none';
+	}
 </script>
 
 <div align="center">
-    <form method="POST" action="">
-        <br>Activity<select name="activity" onchange="extraOption(this.value);">
-            <option value="Problem Definition">Problem Definition</option>
-            <option value="Generation of Ideas">Generation of Ideas</option>                
-            <option value="Modeling">Modeling</option>
-            <option value="Feasability of Analysis">Feasability of Analysis</option>
-            <option value="Evaluation">Evaluation</option>
-            <option value="Decision">Decision</option>
-            <option value="Communication">Communication</option>
-            <option value="Implementation">Implementation</option>
-            <option value="Other">Other</option>
-        </select>
-        <input type="TEXT" name="activityOther" id="activityOther" style='display:none;' /></br>
-        <br>Task:<input type="TEXT" name="task" id="task"/></br>
-        <br>Hours:<input type="number" name="hours" id="hours" step=any></br>
-        <br>Details:</br>
-        <br><textarea rows="4" cols="50" name="details"></textarea></br>
-        <br><input type="submit" value="Submit"/></br>
-    </form> 
+	<form method="POST" action="">
+		<br>Activity<select name="activity" onchange="extraOption(this.value);">
+			<option value="Problem Definition">Problem Definition</option>
+			<option value="Generation of Ideas">Generation of Ideas</option>                
+			<option value="Modeling">Modeling</option>
+			<option value="Feasability of Analysis">Feasability of Analysis</option>
+			<option value="Evaluation">Evaluation</option>
+			<option value="Decision">Decision</option>
+			<option value="Communication">Communication</option>
+			<option value="Implementation">Implementation</option>
+			<option value="Other">Other</option>
+		</select>
+		<input type="TEXT" name="activityOther" id="activityOther" style='display:none;' /></br>
+		<br>Task:<input type="TEXT" name="task" id="task"/></br>
+		<br>Hours:<input type="number" name="hours" id="hours" step=any></br>
+		<br>Details:</br>
+		<br><textarea rows="4" cols="50" name="details"></textarea></br>
+		<br><input type="submit" value="Submit"/></br>
+	</form> 
 </div>
 
-<div>
-    <br><h2>List of activities</h2></br>
-    {% for activity in activities %}
-    <p>{{ activity['date'] }} - {{ activity['group'] }}</p>
+<div align="center">
+	<br><h2>List of activities</h2></br>
+	<table style="width:100%">
+		<tr>
+			<th>Author</th>
+			<th>Date</th>
+			<th>Activity</th>
+			<th>Task</th>
+			<th>Hours</th>
+			<th>Details</th>
+		</tr>
+		
+		{% for activity in activities %}
+		<tr>	
+			<td>{{ activity['author'] }}</td>
+			<td>{{ activity['date'] }}</td>
+			<td>{{ activity['activity'] }}</td>
+			<td>{{ activity['task'] }}</td>
+			<td>{{ activity['hours'] }}</td>
+			<td>{{ activity['details'] }}</td>
+		</tr>
+    <!-- <p>{{ activity['date'] }} - {{ activity['group'] }}</p>
     <p>Activity: {{ activity['activity'] }}</p>
     <p>Task: {{ activity['task'] }} </p>
     <p>Hours: {{ activity['hours'] }} </p>
     <p>Details: {{ activity['details'] }}</p>
-    <br></br>
+    <br></br> -->
     <!--p>{{ activity['author']}} &nbsp; activity['activity'] &nbsp; activity['task'] &nbsp; activity['hours'] &nbsp; activity['details'] &nbsp; activity['date']   </p-->
     {% endfor %}
+</table>
 </div>
 {% endblock %}

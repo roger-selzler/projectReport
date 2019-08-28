@@ -1,12 +1,13 @@
 from pymongo import MongoClient
 import datetime
+import itertools
 # import numpy as np
 
 client = MongoClient('localhost',27017)
 
 createMinimalData = True
 resetDB = False
-resetDB = True
+# resetDB = True
 if resetDB == True:
     client.drop_database('prjMngRpt')
 
@@ -43,9 +44,23 @@ def insertActivity(author,activityName,task,hours,details):
     post_id = activities.insert_one(activity).inserted_id
     print(post_id)
 
+def insertActivityWithDate(author,activityName,task,hours,details,date):
+    activities = prjdb.activities
+    group = getAssignedGroupUser(author)
+    activity = dict(author=author,
+            group=group,
+            activity = activityName,
+            task = task,
+            hours = hours,
+            details = details,
+            date = date)
+    print(activity)
+    post_id = activities.insert_one(activity).inserted_id
+    print(post_id)
+
 def getActivities():
     activities = prjdb.activities
-    listOfActivities = activities.find().sort("date")
+    listOfActivities = activities.find().sort("date",-1)
     print('Activities')
     for i in listOfActivities:
         if "author" in i:
@@ -73,7 +88,7 @@ def getActivitiesByUsername(username):
 
 def getActivitiesByGroup(groupX):
     activities = prjdb.activities
-    listOfActivities = activities.find(dict(group=groupX)).sort("date")
+    listOfActivities = activities.find(dict(group=groupX)).sort("date",-1)
     act = []
     print("Group selected is: \"" + groupX +"\"")
     print('Activities by group')
@@ -82,19 +97,30 @@ def getActivitiesByGroup(groupX):
         act.append(i)
     return act
 
-def organizeActivityByWeek(activities):
+def organizeActivityForReport(activities,config):
     pinfo = getProjectInfo();
     startDate = pinfo['startDate']
     seq =[activity['date'] for activity in activities]
-    weeks = [(seqN-startDate).days/7 for seqN in seq]
+    weeks = [(seqN-startDate).days/7+1 for seqN in seq]
     uniqueWeeks = []
+    organizedActivities = dict()
     for week in weeks:
         if week not in uniqueWeeks:
             uniqueWeeks.append(week)
     uniqueWeeks.sort(reverse=True)
-    for week in uniqueWeeks:
-        if week in weeks:
-            print week #TODO
+    for uniqueWeek in uniqueWeeks:
+        for (week,activity) in itertools.izip(weeks,activities):
+            if week == uniqueWeek:
+                if 'week'+str(week) not in organizedActivities:
+                    organizedActivities['week'+str(week)]=list()
+                organizedActivities['week'+str(week)].append(activity)
+    # for week in list(organizedActivities):
+    #     organizedActivities[week] = sorted(organizedActivities[week])
+    return organizedActivities
+
+def getSummaryReportDataByGroup(group):
+    activities = getActivitiesByGroup(group)
+    
 
 
 def updateGroupActivity(username,group):
@@ -143,6 +169,7 @@ def assignGroup(username,group):
     else:
         assignedGroups.update_one(dict(_id=aGrp['_id']),{"$set":dict(username=username,group=group)},upsert=False)
     aGrp = assignedGroups.find_one(dict(username=username))
+    updateGroupActivity(username,group)
     print(aGrp)
 
 def listAssignedGroups():
@@ -169,19 +196,24 @@ if resetDB and createMinimalData:
     ProjectInfo(datetime.datetime(2019,8,1,0,0,0))
     insertGroup('G1')
     insertGroup('G2')
-    insertGroup('G2')
+    insertGroup('G3')
     getGroups()
     
     listAssignedGroups()
     assignGroup('rogerselzler','G1')
-    assignGroup('CarlosSelzler','G1')
+    assignGroup('carlosselzler','G1')
+    assignGroup('giovannigiacommo','G2')
+    assignGroup('franksinatra','G2')
     listAssignedGroups()
     assignGroup('rogerselzler','G2')
-    assignGroup('rogerselzler','G2')
+    assignGroup('rogerselzler','G1')
     listAssignedGroups()
     
-    insertActivity("rogerselzler","management","editing papers",4,"details1")    
-    insertActivity("rogerselzler","management","editing papers one more time",22,"details2")
+    insertActivityWithDate("rogerselzler","management","editing papers",4,"details1",datetime.datetime(2019,8,15,15,35,0))    
+    insertActivityWithDate("carlosselzler","management","editing papers",4,"details1",datetime.datetime(2019,8,17,15,35,0))    
+    insertActivityWithDate("carlosselzler","management","editing papers",4,"details1",datetime.datetime(2019,8,13,15,35,0))    
+    insertActivityWithDate("franksinatra","management","editing papers",4,"details1",datetime.datetime(2019,8,12,15,35,0))    
+    insertActivity("franksinatra","management","editing papers one more time",22,"details2")
     insertActivity("CarlosSelzler","Business","Selling to xxx",3.4,"details3")
     getActivities()
     
