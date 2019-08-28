@@ -4,9 +4,9 @@ sudo apt-get -y install python-pip
 sudo pip install virtualenv
 sudo apt-get -y install virtualenv
 
-sudo virtualenv /prjvenv
-source /prjvenv/bin/activate
-pip install flask flask-user Flask-MongoEngine
+virtualenv ~/prjvenv
+source ~/prjvenv/bin/activate
+pip install flask flask-user Flask-MongoEngine numpy
 
 
 
@@ -22,17 +22,22 @@ sudo service mongod start
 # -- add autocompletion functionalities for vim
 cd ~/ 
 sudo apt-get install curl vim exuberant-ctags git ack-grep
-sudo pip install pep8 flake8 pyflakes isort yapf 
+pip install pep8 flake8 pyflakes isort yapf 
 [ -f ~/.vimrc ] || wget https://raw.github.com/fisadev/fisa-vim-config/master/.vimrc -O ~/.vimrc
 vim -c :q! ~/.vimrc
 
 # Create autocompletion for python on bash shell
-[ -f ~/.pythonrc ] && echo "File ~/.pythonrc already exist" || touch ~/.pythonrc && sudo echo "try:
+if [ -f ~/.pythonrc ]; then
+	echo "File ~/.pythonrc already exist"
+else
+	touch ~/.pythonrc
+	sudo echo "try:
     import readline
     import rlcompleter
     readline.parse_and_bind(\"tab: complete\")
 except ImportError:
     print(\"Module readline not available.\")" > ~/.pythonrc
+fi
 
 [ -f ~/.bashrc ] || touch ~/.bashrc 
 grep -qxF 'export PYTHONSTARTUP=~/.pythonrc' ~/.bashrc && echo 'export PYTHONSTARTUP=~/.pythonrc already exists on ~/.bashrc' || echo 'export PYTHONSTARTUP=~/.pythonrc' >> ~/.bashrc

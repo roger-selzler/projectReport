@@ -1,10 +1,12 @@
 from pymongo import MongoClient
 import datetime
+# import numpy as np
 
 client = MongoClient('localhost',27017)
 
+createMinimalData = True
 resetDB = False
-#resetDB = True
+resetDB = True
 if resetDB == True:
     client.drop_database('prjMngRpt')
 
@@ -66,17 +68,34 @@ def getActivitiesByUsername(username):
         if "group" in i:
             print(str(i['date']) + ' ' + i["group"])
             print(i['activity'])
-        print (" " )
+        print (" ")
     return act
 
-def getActivitiesByGroup(group):
+def getActivitiesByGroup(groupX):
     activities = prjdb.activities
-    listOfActivities = activities.find(dict(group=group)).sort("date",-1)
+    listOfActivities = activities.find(dict(group=groupX)).sort("date")
     act = []
+    print("Group selected is: \"" + groupX +"\"")
     print('Activities by group')
     for i in listOfActivities:
+        print("got activity")
         act.append(i)
     return act
+
+def organizeActivityByWeek(activities):
+    pinfo = getProjectInfo();
+    startDate = pinfo['startDate']
+    seq =[activity['date'] for activity in activities]
+    weeks = [(seqN-startDate).days/7 for seqN in seq]
+    uniqueWeeks = []
+    for week in weeks:
+        if week not in uniqueWeeks:
+            uniqueWeeks.append(week)
+    uniqueWeeks.sort(reverse=True)
+    for week in uniqueWeeks:
+        if week in weeks:
+            print week #TODO
+
 
 def updateGroupActivity(username,group):
     activities = prjdb.activities
@@ -132,21 +151,33 @@ def listAssignedGroups():
     for i in assignedGroups:
         print(i['username'] + ' ' + i['group'])
 
+def ProjectInfo(startDate):
+    pinfo = prjdb.projectInfo
+    info = pinfo.find_one()
+    if info == None:
+        infoId = pinfo.insert_one(dict(startDate=startDate))
+    else:
+        pinfo.update_one(dict(_id=info['_id']),{"$set":dict(startDate=startDate)},upsert=False)
 
+def getProjectInfo():
+    pinfo = prjdb.projectInfo
+    info = pinfo.find_one()
+    return info
 
 # ------ Tests
-if resetDB:
-    insertGroup('Ggg1')
-    insertGroup('Ggg22')
-    insertGroup('Ggg22')
+if resetDB and createMinimalData:
+    ProjectInfo(datetime.datetime(2019,8,1,0,0,0))
+    insertGroup('G1')
+    insertGroup('G2')
+    insertGroup('G2')
     getGroups()
     
     listAssignedGroups()
-    assignGroup('rogerselzler','Ggg1')
-    assignGroup('CarlosSelzler','Ggg21')
+    assignGroup('rogerselzler','G1')
+    assignGroup('CarlosSelzler','G1')
     listAssignedGroups()
-    assignGroup('rogerselzler','Ggg12')
-    assignGroup('rogerselzler','Ggg221')
+    assignGroup('rogerselzler','G2')
+    assignGroup('rogerselzler','G2')
     listAssignedGroups()
     
     insertActivity("rogerselzler","management","editing papers",4,"details1")    

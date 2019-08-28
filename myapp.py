@@ -5,7 +5,7 @@ import os
 import backend
 
 # Need to start the mongo server 
-os.system('sudo service mongod Start')
+#os.system('sudo service mongod Start')
 
 dbUsers = 'projectReport'
 #userData = backend.userMng()
@@ -152,18 +152,31 @@ def create_app():
     @login_required
     def viewGroupReportPage():
         groups = backend.getGroups()
-        if len(groups)>0:
+        if len(groups) > 0:
             selectedGroup = groups[0]
+        else :
+            selectedGroup = ""
+        reportType = "week"
         activities = backend.getActivitiesByGroup(selectedGroup)
+        projectInfo = backend.getProjectInfo()
+        print projectInfo
+        print "creating viewGroupReportPage"
         if request.method == 'POST':
             selectedGroup = request.form['selectedGroup']
+            reportType = request.form['reportType']
             activities = backend.getActivitiesByGroup(selectedGroup)
-            activities = backend.getActivitiesByUsername(current_user.username)
-            print "there was a post request in viewGroupReport",selectedGroup
-            for activity in activities:
-                print(activity)
-            return render_template('viewGroupReport.html',activities = activities,groups = groups,selectedGroup = selectedGroup)
-        return render_template('viewGroupReport.html',activities = activities,groups = groups,selectedGroup = selectedGroup)
+            print "there was a post request in viewGroupReport",selectedGroup,reportType
+            return render_template( 'viewGroupReport.html',
+                activities = activities,
+                groups = groups,
+                selectedGroup = selectedGroup,
+                reportType = reportType)
+            # return redirect(url_for('viewGroupReportPage',selectedGroup))
+        return render_template('viewGroupReport.html',
+            activities = activities,
+            groups = groups,
+            selectedGroup = selectedGroup,
+            reportType = reportType)
 
     return app
 
