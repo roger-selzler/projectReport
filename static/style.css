@@ -36,9 +36,9 @@ table, th, td {
 }
 
 .sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
+	position: fixed;
+	top: 0;
+	width: 100%;
 }
 
 
@@ -77,12 +77,42 @@ table, th, td {
 }
 
 @media screen and (max-height: 450px) {
-  .adminMenu {padding-top: 15px;}
-  .adminMenu a {font-size: 18px;}
+	.adminMenu {padding-top: 15px;}
+	.adminMenu a {font-size: 18px;}
 }
 
+form  { display: table;      }
+p     { display: table-row;  }
+label { display: table-cell; }
+input { display: table-cell; }
 
+.loginForm {
+	display: table;
+	width: 500px;
+	clear: both;
+}
+.loginForm p{
+	display: table-row;
+}
+.loginForm label{
+	text-align: right;
+	display: table-cell;
+}
+.loginForm input{
+	display: table-cell;
+}
+.loginForm a{
+	display: table-cell;
+	text-align: right;
+}
 
+/*.loginForm input{
+	width: 60%;
+	clear: both;
+}*/
+.copyFooter p {
+	text-align: center;
+}
 
 
 /**/

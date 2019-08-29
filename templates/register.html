@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div align="center">
+	<br /> <br />
+
+	<form class="loginForm">
+	<p>
+		<label for="firstname">First Name:</label>
+		<input type="TEXT" name="firstname" id="firstname"/>
+	</p>
+	<p>
+		<label for="lastname">Last Name:</label>
+		<input type="TEXT" name="lastname" id="lastname"/>
+	</p>
+	<p>
+		<label for="username">Username:</label>
+		<input type="TEXT" name="username" id="username"/>
+	</p>
+	<p>
+		<label for="email">email:</label>
+		<input type="email" name="email" id="email"/>
+	</p>
+	<p>
+		<label for="password">Password:</label>
+		<input type="password" name="password" id="password">
+	</p>
+	<p>
+		<label for="signin"></label>
+		<a href="/Home" id="signin">Sign in</a>
+	</p>
+	<label for="send"></label>
+	<input type="submit" id="send" value="Register">
+	<!-- <input type="button" name="send" value="Register"> -->
+	
+	</form>
+
+</div>
+
+{% endblock %}

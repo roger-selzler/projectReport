@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import datetime
 import itertools
+from flask_user import current_user
 # import numpy as np
 
 client = MongoClient('localhost',27017)
@@ -15,9 +16,41 @@ prjdb = client['prjMngRpt']
 dbUsers = client['projectReport']
 
 # functions to deal with users 
-def isAdmin(self,username):
-    return True #TODO 
-    
+def isAdmin(username):
+    roles = getUserRoles(username)
+    if 'admin' in roles:
+        print(username + ' is admin')
+        return True
+    else:
+        print(username + ' is NOT admin')
+        return False
+
+def getUser():
+    usersCollection = dbUsers.user
+    users = []
+    for userX in usersCollection.find():
+        users.append(userX)
+    return users
+
+def setRolesUser(username,roles):
+    usersCollection = dbUsers.user
+    user = usersCollection.find_one(dict(username=username))
+    print user
+    if user != None:
+        usersCollection.update_one(dict(_id=user['_id']),{"$set":dict(roles=roles)},upsert=False)
+    user = usersCollection.find_one(dict(username=username))
+    print user
+
+def getUserRoles(username):
+    usersCollection = dbUsers.user
+    user = usersCollection.find_one(dict(username=username))
+    if user != None:
+        roles = user['roles']
+    else:
+        roles =[]
+    return roles
+
+
 def getUsernames():
     usersCollection = dbUsers.user
     users = []
@@ -26,7 +59,6 @@ def getUsernames():
     for userX in users:
         print(userX)
     return users
-
 
 # functions to deal with the activities
 #prjdb.activities.drop()
@@ -138,10 +170,10 @@ def getSummaryReportDataByGroup(activities):
             summary['extraInfo'][uniqueAuthor]=dict(hours=0)
     # Compute total hours per author
     for activity in activities:
-        summary[activity['activity']][activity['author']]['hours'] += activity['hours']
-        summary[activity['activity']]['hours'] += activity['hours']
-        summary['extraInfo']['hours'] += activity['hours']
-        summary['extraInfo'][activity['author']]['hours'] += activity['hours']
+        summary[activity['activity']][activity['author']]['hours'] += float(activity['hours'])
+        summary[activity['activity']]['hours'] += float(activity['hours'])
+        summary['extraInfo']['hours'] += float(activity['hours'])
+        summary['extraInfo'][activity['author']]['hours'] += float(activity['hours'])
 
     return summary
 
@@ -231,17 +263,18 @@ if resetDB and createMinimalData:
     assignGroup('rogerselzler','G1')
     listAssignedGroups()
     
-    insertActivityWithDate("rogerselzler","management","editing papers",4,"details1",datetime.datetime(2019,8,15,15,35,0))    
-    insertActivityWithDate("carlosselzler","management","editing papers",2,"details1",datetime.datetime(2019,8,17,15,35,0))    
-    insertActivityWithDate("carlosselzler","Business","editing papers",3,"details1",datetime.datetime(2019,8,13,15,35,0))    
-    insertActivityWithDate("franksinatra","control","editing papers",5,"details1",datetime.datetime(2019,8,12,15,35,0))    
-    insertActivity("franksinatra","Business","editing papers one more time",1.5,"details2")
-    insertActivity("giovannigiacommo","Business","editing papers one more time",1.22,"details2")
-    insertActivity("carlosselzler","Business","Selling to xxx",3.4,"details3")
+    insertActivityWithDate("rogerselzler","Problem Definition","read specification",4,"details1",datetime.datetime(2019,8,15,15,35,0))    
+    insertActivityWithDate("carlosselzler","Problem Definition","define requirements",2,"details1",datetime.datetime(2019,8,17,15,35,0))    
+    insertActivityWithDate("carlosselzler","Problem Definition","clarify with TA",3,"details1",datetime.datetime(2019,8,13,15,35,0))    
+    insertActivityWithDate("franksinatra","Generation of Ideas","Use case diagram",5,"details1",datetime.datetime(2019,8,12,15,35,0))    
+    insertActivityWithDate("franksinatra","Generation of Ideas","class diagram",1.5,"details2",datetime.datetime(2019,8,27,15,35,0)) 
+    insertActivityWithDate("giovannigiacommo","Generation of Ideas","Interaction diagrams",1.22,"details2",datetime.datetime(2019,8,25,15,35,0)) 
+    insertActivityWithDate("carlosselzler","Generation of Ideas","protocols/capsulesx",3.4,"details3",datetime.datetime(2019,8,23,15,35,0)) 
     getActivities()
     
     
-    
+
+
     updateGroupActivity('rogerselzler',getAssignedGroupUser('rogerselzler'))
     getActivities()
 

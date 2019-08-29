@@ -1,6 +1,6 @@
 from flask import Flask, render_template, render_template_string, request, url_for, redirect
 from flask_mongoengine import MongoEngine
-from flask_user import login_required, UserManager, UserMixin,current_user
+from flask_user import login_required, UserManager, UserMixin,current_user, roles_required
 import os 
 import backend
 
@@ -48,46 +48,41 @@ def create_app():
         # User information
         first_name = db.StringField(default='')
         last_name = db.StringField(default='')
+        email = db.StringField(default='')
         # Relationships
         roles = db.ListField(db.StringField(), default=[])
+
     # Setup Flask-User and specify the User data-model
     user_manager = UserManager(app, db, User)
     
     # The Home page is accessible to anyone
-    @app.route('/')
-    def home_page():
+    @app.route('/',methods=['GET','POST'])
+    def root_page():
         if current_user.is_authenticated:
-            return redirect('/members')
+            return redirect(url_for('homePage'))
         else:
-            return render_template_string("""
-                {% extends "layout.html" %}
-                {% block content %}
-                     <h2>Home page</h2>
-                         <p><a href={{ url_for('user.register') }}>Register</a></p>
-                         <p><a href={{ url_for('user.login') }}>Sign in</a></p>
-                         <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
-                         <p><a href={{ url_for('member_page') }}>Member page</a> (login required)</p>
-                         <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
-                {% endblock %}
-            """)
+            if request.method == 'GET':
+                print 'GET method'
+            if request.method =='POST':
+                print request.form['username']
+                print request.form['password']
+
+            return render_template('login.html')
+
+    @app.route('/Register') # TODO
+    def registerPage():
+        return render_template('register.html')
+
+        # return redirect('/Home')
 
     # The Members page is only accessible to authenticated users via the @login_required decorator
-    @app.route('/members')
-    @login_required    # User must be authenticated
-    def member_page():
-        print(current_user.username)
-        # String-based templates
-        return render_template_string("""
-            {% extends "layout.html" %}
-            {% block content %}
-                <h2>Members page</h2>
-                <p><a href={{ url_for('user.register') }}>Register</a></p>
-                <p><a href={{ url_for('user.login') }}>Sign in</a></p>
-                <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
-                <p><a href={{ url_for('member_page') }}>Member page</a> (login required)</p>
-                <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
-            {% endblock %}
-            """)
+    @app.route('/Home') # TODO
+    @login_required   
+    def homePage():
+        # print(current_user.username)
+        return render_template('layout.html',isAdmin = backend.isAdmin(current_user.username))
+
+    
 
     @app.route('/registerActivity',methods=['GET', 'POST'])
     @login_required
@@ -151,6 +146,7 @@ def create_app():
 
     @app.route('/admin/viewGroupReport',methods=['GET','POST'])
     @login_required
+    @roles_required('admin')
     def viewGroupReportPage():
         groups = backend.getGroups()
         if len(groups) > 0:

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div align="center">
+	<br /> <br />
+
+<form class="loginForm">
+	<p>
+		<label for="username">Username:</label>
+		<input type="TEXT" value="username" id="username"/>
+	</p>
+	<p>
+		<label for="password">Password:</label>
+		<input type="password" value="password" id="password">
+	</p>
+	<p>
+		<a href="/Register">Register</a>
+	</p>
+	<input type="submit" value="Sign in" id="Sign in">
+	</form>
+
+</div>
+
+{% endblock %}
