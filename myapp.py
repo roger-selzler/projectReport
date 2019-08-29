@@ -161,6 +161,7 @@ def create_app():
         reportOptions = ['Week']
         reportType = reportOptions[0]
         activities = backend.getActivitiesByGroup(selectedGroup)
+        summary = backend.getSummaryReportDataByGroup(activities)
         activities = backend.organizeActivityForReport(activities,reportType)
         projectInfo = backend.getProjectInfo()
         print projectInfo
@@ -170,6 +171,7 @@ def create_app():
             reportType = request.form['reportType']
             activities = backend.getActivitiesByGroup(selectedGroup)
             config = reportType
+            summary = backend.getSummaryReportDataByGroup(activities)
             activities = backend.organizeActivityForReport(activities,config)
             print "there was a post request in viewGroupReport",selectedGroup,reportType
             return render_template( 'viewGroupReport.html',
@@ -177,14 +179,16 @@ def create_app():
                 groups = groups,
                 selectedGroup = selectedGroup,
                 reportType = reportType,
-                reportOptions=reportOptions)
+                reportOptions=reportOptions,
+                summary=summary)
             # return redirect(url_for('viewGroupReportPage',selectedGroup))
         return render_template('viewGroupReport.html',
             activities = activities,
             groups = groups,
             selectedGroup = selectedGroup,
             reportType = reportType,
-            reportOptions=reportOptions)
+            reportOptions=reportOptions,
+            summary=summary)
 
     return app
 

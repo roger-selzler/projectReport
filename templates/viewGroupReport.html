@@ -17,46 +17,77 @@
 				{% endfor %}
 			</select>
 			<select name="reportType" onchange="this.form.submit();">
-			{% for reportOption in reportOptions %}
-			{%if reportType == reportOption%}
-			<option  selected={{reportOption}}>{{reportOption}}</option> 
-			{%else%}
-			<option  value={{reportOption}}>{{reportOption}}</option>
-			{% endif %}
-			{% endfor %}
-		</select>
-	</br>
-</form>
+             {% for reportOption in reportOptions %}
+             {%if reportType == reportOption%}
+             <option  selected={{reportOption}}>{{reportOption}}</option> 
+             {%else%}
+             <option  value={{reportOption}}>{{reportOption}}</option>
+             {% endif %}
+             {% endfor %}
+         </select>
+     </br>
+ </form>
 </div>
 
 
 <div align="center" id="listOfActivitiesDiv">
-	<br><h2>List of activities</h2></br>
-	<!-- <p>{{activities}} *</p> -->
-	{% if reportType == "Week" %}
-	<table style="width:100%">
-		<tr>
-			<th>Week</th>
-			<th>Author</th>
-			<th>Activity</th>
-			<th>Task</th>
-			<th>Hours</th>
-			<th>Details</th>
-		</tr>
-		{% for week in activities|sort(reverse=true) %}
-		<tr>
-			<td rowspan="{{activities[week]|length}}">{{week}}</td>
-		{% for activity in activities[week] %}
-		<!-- <tr> -->
-			<!-- <td>{{ activity['date'] }}</td> -->
-			<td>{{ activity['author'] }}</td>
-			<td>{{ activity['activity'] }}</td>
-			<td>{{ activity['task'] }}</td>
-			<td>{{ activity['hours'] }}</td>
-			<td>{{ activity['details'] }}</td>
-		</tr>
-		<tr>
-		<!--{{ activity['date'] }} - {{ activity['group'] }} -->
+    <br><h2> Summary of activities</h2>
+    <table>
+        <tr>
+            <th>Activity</th>
+            {% for author in summary[(summary|select("ne",'extraInfo')|first)] %}
+            {% if author != 'hours' %}
+            <th> {{author}}</th>
+            {%endif%}
+            {%endfor%}
+            <th>Hours</th>
+        </tr>
+        {% for activity in summary|select("ne",'extraInfo') %}
+        <tr>
+            <td>{{activity}}</td>
+            {%for username in summary[activity]|select("ne",'hours') %}
+            <td>{{summary[activity][username]['hours']}}</td>
+            {%endfor%}
+            <td>{{summary[activity]['hours']}}
+        </tr>
+        {%endfor%}
+        <tr>
+            <td>Total</td>
+            {%for author in summary['extraInfo']|select("ne",'hours') %}
+            <td>{{summary['extraInfo'][author]['hours']}}</td>
+            {%endfor%}
+            <th>{{summary['extraInfo']['hours']}}</th>
+        </tr>
+        
+    </table>
+    
+
+    <br><h2>List of activities</h2>
+    <!-- <p>{{activities}} *</p> -->
+    {% if reportType == "Week" %}
+    <table style="width:100%">
+      <tr>
+         <th>Week</th>
+         <th>Author</th>
+         <th>Activity</th>
+         <th>Task</th>
+         <th>Hours</th>
+         <th>Details</th>
+     </tr>
+     {% for week in activities|sort(reverse=true) %}
+     <tr>
+         <td rowspan="{{activities[week]|length}}">{{week}}</td>
+         {% for activity in activities[week] %}
+         <!-- <tr> -->
+             <!-- <td>{{ activity['date'] }}</td> -->
+             <td>{{ activity['author'] }}</td>
+             <td>{{ activity['activity'] }}</td>
+             <td>{{ activity['task'] }}</td>
+             <td>{{ activity['hours'] }}</td>
+             <td>{{ activity['details'] }}</td>
+         </tr>
+         <tr>
+          <!--{{ activity['date'] }} - {{ activity['group'] }} -->
     <!--p>Activity: {{ activity['activity'] }}</p>
     <p>Task: {{ activity['task'] }} </p>
     <p>Hours: {{ activity['hours'] }} </p>

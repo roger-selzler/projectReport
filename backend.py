@@ -7,7 +7,7 @@ client = MongoClient('localhost',27017)
 
 createMinimalData = True
 resetDB = False
-# resetDB = True
+resetDB = True
 if resetDB == True:
     client.drop_database('prjMngRpt')
 
@@ -118,10 +118,32 @@ def organizeActivityForReport(activities,config):
     #     organizedActivities[week] = sorted(organizedActivities[week])
     return organizedActivities
 
-def getSummaryReportDataByGroup(group):
-    activities = getActivitiesByGroup(group)
-    
+def getSummaryReportDataByGroup(activities):
+    # activities = getActivitiesByGroup(group)
+    summary = dict()
+    summary['extraInfo']=dict(hours=0)
+    uniqueActivities = []
+    uniqueAuthors =[]
+    for activity in activities:
+        if activity['activity'] not in uniqueActivities:
+            uniqueActivities.append(activity['activity'])
+        if activity['author'] not in uniqueAuthors:
+            uniqueAuthors.append(activity['author'])
+    # build the structure
+    for uniqueActivity in uniqueActivities:
+        if uniqueActivity not in summary:
+            summary[uniqueActivity] = dict(hours=0)
+        for uniqueAuthor in uniqueAuthors:
+            summary[uniqueActivity][uniqueAuthor]=dict(hours=0)
+            summary['extraInfo'][uniqueAuthor]=dict(hours=0)
+    # Compute total hours per author
+    for activity in activities:
+        summary[activity['activity']][activity['author']]['hours'] += activity['hours']
+        summary[activity['activity']]['hours'] += activity['hours']
+        summary['extraInfo']['hours'] += activity['hours']
+        summary['extraInfo'][activity['author']]['hours'] += activity['hours']
 
+    return summary
 
 def updateGroupActivity(username,group):
     activities = prjdb.activities
@@ -203,18 +225,19 @@ if resetDB and createMinimalData:
     assignGroup('rogerselzler','G1')
     assignGroup('carlosselzler','G1')
     assignGroup('giovannigiacommo','G2')
-    assignGroup('franksinatra','G2')
+    assignGroup('franksinatra','G1')
     listAssignedGroups()
     assignGroup('rogerselzler','G2')
     assignGroup('rogerselzler','G1')
     listAssignedGroups()
     
     insertActivityWithDate("rogerselzler","management","editing papers",4,"details1",datetime.datetime(2019,8,15,15,35,0))    
-    insertActivityWithDate("carlosselzler","management","editing papers",4,"details1",datetime.datetime(2019,8,17,15,35,0))    
-    insertActivityWithDate("carlosselzler","management","editing papers",4,"details1",datetime.datetime(2019,8,13,15,35,0))    
-    insertActivityWithDate("franksinatra","management","editing papers",4,"details1",datetime.datetime(2019,8,12,15,35,0))    
-    insertActivity("franksinatra","management","editing papers one more time",22,"details2")
-    insertActivity("CarlosSelzler","Business","Selling to xxx",3.4,"details3")
+    insertActivityWithDate("carlosselzler","management","editing papers",2,"details1",datetime.datetime(2019,8,17,15,35,0))    
+    insertActivityWithDate("carlosselzler","Business","editing papers",3,"details1",datetime.datetime(2019,8,13,15,35,0))    
+    insertActivityWithDate("franksinatra","control","editing papers",5,"details1",datetime.datetime(2019,8,12,15,35,0))    
+    insertActivity("franksinatra","Business","editing papers one more time",1.5,"details2")
+    insertActivity("giovannigiacommo","Business","editing papers one more time",1.22,"details2")
+    insertActivity("carlosselzler","Business","Selling to xxx",3.4,"details3")
     getActivities()
     
     
