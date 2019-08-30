@@ -55,19 +55,21 @@ def create_app():
     # Setup Flask-User and specify the User data-model
     user_manager = UserManager(app, db, User)
     
-    # The Home page is accessible to anyone
     @app.route('/',methods=['GET','POST'])
     def root_page():
         if current_user.is_authenticated:
             return redirect(url_for('homePage'))
         else:
-            if request.method == 'GET':
-                print 'GET method'
-            if request.method =='POST':
-                print request.form['username']
-                print request.form['password']
+            # if request.method == 'POST':
+            #     userName = request.form['username']
+            #     password = request.form['password']
+            #     # user = User.query.filter_by(username=request.form.username.data).first()
+            #     print 'POST method ' , userName, password
+            # if request.method =='POST':
+            #     print request.form['username']
+            #     print request.form['password']
 
-            return render_template('login.html')
+            return redirect(url_for('user.login'))
 
     @app.route('/Register') # TODO
     def registerPage():
