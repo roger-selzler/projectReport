@@ -6,7 +6,7 @@ from flask_user import current_user
 
 client = MongoClient('localhost',27017)
 
-createMinimalData = True
+createMinimalData = False
 resetDB = False
 resetDB = True
 if resetDB == True:
@@ -130,6 +130,8 @@ def getActivitiesByGroup(groupX):
     return act
 
 def organizeActivityForReport(activities,config):
+    if len(activities) == 0:
+        return []
     pinfo = getProjectInfo();
     startDate = pinfo['startDate']
     seq =[activity['date'] for activity in activities]

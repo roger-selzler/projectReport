@@ -6,7 +6,7 @@ sudo apt-get -y install virtualenv
 
 virtualenv ~/prjvenv
 source ~/prjvenv/bin/activate
-pip install flask flask-user Flask-MongoEngine numpy
+pip install flask flask-user Flask-MongoEngine numpy Flask-Security
 
 
 
