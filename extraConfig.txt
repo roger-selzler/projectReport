@@ -1,0 +1,12 @@
+https://docs.google.com/document/d/1P0SwZ6elP0B9G7lPdAzYbKSupEvGcojzerFStOSOM5o/edit
+
+http://www.noip.com/support/knowledgebase/installing-the-linux-dynamic-update-client/
+https://www.ostechnix.com/configure-apache-virtual-hosts-ubuntu-part-1/
+https://flask.palletsprojects.com/en/1.1.x/deploying/mod_wsgi/
+
+https://www.youtube.com/watch?v=lRXWhzwNkSY
+https://eu.dlink.com/uk/en/support/faq/routers/mydlink-routers/dir-810l/how-do-i-set-up-website-filtering-on-my-router
+
+
+sudo apt purge apache2*
+sudo apt-get install apache2
