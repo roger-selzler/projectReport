@@ -50,6 +50,11 @@ def getUserRoles(username):
         roles =[]
     return roles
 
+def deleteUser(username):
+	usersCollection = dbUsers.user
+	user = usersCollection.find_one(dict(username=username))
+	if user != None:
+		usersCollection.delete_one(dict(username=username))
 
 def getUsernames():
     usersCollection = dbUsers.user
