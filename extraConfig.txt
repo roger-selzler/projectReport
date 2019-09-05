@@ -9,4 +9,6 @@ https://eu.dlink.com/uk/en/support/faq/routers/mydlink-routers/dir-810l/how-do-i
 
 
 sudo apt purge apache2*
-sudo apt-get install apache2
+sudo apt-get install apache
+sudo apt-get install libapache2-mod-wsgi
+

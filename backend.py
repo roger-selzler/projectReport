@@ -8,7 +8,7 @@ client = MongoClient('localhost',27017)
 
 createMinimalData = False
 resetDB = False
-resetDB = True
+resetDB = False
 if resetDB == True:
     client.drop_database('prjMngRpt')
 
@@ -245,6 +245,9 @@ def ProjectInfo(startDate):
 def getProjectInfo():
     pinfo = prjdb.projectInfo
     info = pinfo.find_one()
+    if info == None:
+        ProjectInfo(datetime.datetime(2019,9,4,0,0,0))
+        info = pinfo.find_one()
     return info
 
 # ------ Tests

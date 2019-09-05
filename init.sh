@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e # stop on first error.
+PATHTOPROJECT = $(pwd)
 sudo apt-get -y install python-pip
 sudo pip install virtualenv
 sudo apt-get -y install virtualenv
@@ -42,4 +43,22 @@ fi
 [ -f ~/.bashrc ] || touch ~/.bashrc 
 grep -qxF 'export PYTHONSTARTUP=~/.pythonrc' ~/.bashrc && echo 'export PYTHONSTARTUP=~/.pythonrc already exists on ~/.bashrc' || echo 'export PYTHONSTARTUP=~/.pythonrc' >> ~/.bashrc
 
+# preparing google cloud platform
+# echo "Installing google cloud sdk - need account and project information"
+# echo "Refer to https://cloud.google.com/sdk/docs/#linux"
+# cd ~/
+# [ -f google-cloud-sdk*.tar.gz] && echo "Google cloud files already exist" || wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-260.0.0-linux-x86_64.tar.gz
+# tar -xvzf google-cloud-sdk-*.tar.gz
+# ./google-cloud-sdk/install.sh
+# ./google-cloud-sdk/bin/gcloud init
 
+
+
+sudo apt-get install apache2
+sudo apt-get install libapache2-mod-wsgi
+sudo a2enmod wsgi
+cd PATHTOPROJECT
+[ -d "/var/www/sysc3010" ] || sudo mkdir /var/www/sysc3010
+cd sysc3010
+[ -d "/var/www/sysc3010/sysc3010" ] || sudo mkdir /var/www/sysc3010/sysc3010
+sudo cp -s PATHTOPROJECT+/sysc3010.conf /etc/apache2/sites-available/sysc3010.conf
