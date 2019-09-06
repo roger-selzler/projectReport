@@ -26,34 +26,34 @@ class ConfigClass(object):
     #USER_EMAIL_SENDER_EMAIL = 'rogerse18@gmail.com'
     USER_REQUIRE_RETYPE_PASSWORD = False   # Simplify register form
 
-
-def create_app():
-    """ Flask application factory """
-    # Setup Flask and load app.config
-    app = Flask(__name__)
-    app.config.from_object(__name__+'.ConfigClass')
-    # Setup Flask-MongoEngine
-    db = MongoEngine(app)
+""" Flask application factory """
+# Setup Flask and load app.config
+app = Flask(__name__)
+app.config.from_object(__name__+'.ConfigClass')
+# Setup Flask-MongoEngine
+db = MongoEngine(app)
 
 
-    # Define the User document.
-    # NB: Make sure to add flask_user UserMixin !!!
-    class User(db.Document, UserMixin):
-        active = db.BooleanField(default=True)
-        # User authentication information
-        #email = db.StringField(default='')
-        username = db.StringField(default='')
-        password = db.StringField()
+# Define the User document.
+# NB: Make sure to add flask_user UserMixin !!!
+class User(db.Document, UserMixin):
+    active = db.BooleanField(default=True)
+    # User authentication information
+    #email = db.StringField(default='')
+    username = db.StringField(default='')
+    password = db.StringField()
 #        email_confirmed_at = db.
-        # User information
-        first_name = db.StringField(default='')
-        last_name = db.StringField(default='')
-        email = db.StringField(default='')
-        # Relationships
-        roles = db.ListField(db.StringField(), default=[])
+    # User information
+    first_name = db.StringField(default='')
+    last_name = db.StringField(default='')
+    email = db.StringField(default='')
+    # Relationships
+    roles = db.ListField(db.StringField(), default=[])
 
-    # Setup Flask-User and specify the User data-model
-    user_manager = UserManager(app, db, User)
+# Setup Flask-User and specify the User data-model
+user_manager = UserManager(app, db, User)
+
+def create_app(app):
     
     @app.route('/',methods=['GET','POST'])
     def root_page():
@@ -198,7 +198,7 @@ def create_app():
 
     return app
 
-app = create_app()
+app = create_app(app)
 # Start development web server
 if __name__=='__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -2,6 +2,10 @@ from pymongo import MongoClient
 import datetime
 import itertools
 from flask_user import current_user
+import flask_bcrypt
+# from flask.ext.bcrypt import Bcrypt
+from main import app 
+
 # import numpy as np
 
 client = MongoClient('localhost',27017)
@@ -14,6 +18,7 @@ if resetDB == True:
 
 prjdb = client['prjMngRpt']
 dbUsers = client['projectReport']
+bcrypt = flask_bcrypt.Bcrypt(app)
 
 # functions to deal with users 
 def isAdmin(username):
@@ -41,6 +46,23 @@ def setRolesUser(username,roles):
     user = usersCollection.find_one(dict(username=username))
     print user
 
+def deleteUser(username):
+    usersCollection = dbUsers.user
+    user = usersCollection.find_one(dict(username=username))
+    if user != None:
+        usersCollection.delete_one(dict(username=username))
+
+def createUser(firstname,lastname,email,password):
+    usersCollection = dbUsers.user 
+    user = usersCollection.find_one(dict(username=firstname+lastname))
+    if user == None:
+        usersCollection.insert_one(dict(active=True,
+            first_name=firstname,
+            last_name=lastname,
+            password = bcrypt.generate_password_hash(password).decode('utf-8'),
+            roles = [],
+            username=firstname+lastname))
+        
 def getUserRoles(username):
     usersCollection = dbUsers.user
     user = usersCollection.find_one(dict(username=username))
@@ -49,12 +71,6 @@ def getUserRoles(username):
     else:
         roles =[]
     return roles
-
-def deleteUser(username):
-	usersCollection = dbUsers.user
-	user = usersCollection.find_one(dict(username=username))
-	if user != None:
-		usersCollection.delete_one(dict(username=username))
 
 def getUsernames():
     usersCollection = dbUsers.user

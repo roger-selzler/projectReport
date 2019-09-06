@@ -22,3 +22,11 @@ sudo service apache2 restart
 
 sudo apt-get install ufw
 sudo ufw allow 80/tcp
+
+cd /usr/local/src
+[ -f noip-duc-linux.tar.gz ] || sudo wget http://www.no-ip.com/client/linux/noip-duc-linux.tar.gz
+[ -d no-ip-2.1.9 ] || sudo tar xzf noip-duc-linux.tar.gz
+cd noip-2.1.9-1/
+sudo make
+sudo make install
+sudo /usr/local/bin/noip2
