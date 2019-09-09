@@ -3,6 +3,7 @@ import datetime
 import itertools
 from flask_user import current_user
 import flask_bcrypt
+import re
 # from flask.ext.bcrypt import Bcrypt
 # from main import app
 
@@ -37,6 +38,11 @@ def getUser():
         users.append(userX)
     return users
 
+def printUsernames():
+    users = getUser()
+    for user in users:
+        print(user['username'])
+
 def setRolesUser(username,roles):
     usersCollection = dbUsers.user
     user = usersCollection.find_one(dict(username=username))
@@ -54,14 +60,14 @@ def deleteUser(username):
 
 def createUser(bcrypt,firstname,lastname,email,password):
     usersCollection = dbUsers.user 
-    user = usersCollection.find_one(dict(username=firstname+lastname))
+    user = usersCollection.find_one(dict(username=re.sub('[^a-zA-Z]+','',firstname+lastname).lower()))
     if user == None:
         usersCollection.insert_one(dict(active=True,
             first_name=firstname,
             last_name=lastname,
             password = bcrypt.generate_password_hash(password).decode('utf-8'),
             roles = [],
-            username=firstname+lastname))
+            username=re.sub('[^a-zA-Z]+','',firstname+lastname).lower()))
         
 def getUserRoles(username):
     usersCollection = dbUsers.user

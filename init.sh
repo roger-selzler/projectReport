@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e # stop on first error.
-PATHTOPROJECT = $(pwd)
+PATHTOPROJECT=$(pwd)
+echo $PATHTOPROJECT
 sudo apt-get -y install python-pip
 sudo pip install virtualenv
 sudo apt-get -y install virtualenv
@@ -54,11 +55,11 @@ grep -qxF 'export PYTHONSTARTUP=~/.pythonrc' ~/.bashrc && echo 'export PYTHONSTA
 
 
 
-sudo apt-get install apache2
-sudo apt-get install libapache2-mod-wsgi
-sudo a2enmod wsgi
-cd PATHTOPROJECT
-[ -d "/var/www/sysc3010" ] || sudo mkdir /var/www/sysc3010
-cd sysc3010
-[ -d "/var/www/sysc3010/sysc3010" ] || sudo mkdir /var/www/sysc3010/sysc3010
-sudo cp -s PATHTOPROJECT+/sysc3010.conf /etc/apache2/sites-available/sysc3010.conf
+# sudo apt-get install apache2
+# sudo apt-get install libapache2-mod-wsgi
+# sudo a2enmod wsgi
+# cd $PATHTOPROJECT
+# [ -d "/var/www/sysc3010" ] || sudo mkdir /var/www/sysc3010
+# cd sysc3010
+# [ -d "/var/www/sysc3010/sysc3010" ] || sudo mkdir /var/www/sysc3010/sysc3010
+# sudo cp -s PATHTOPROJECT+/sysc3010.conf /etc/apache2/sites-available/sysc3010.conf

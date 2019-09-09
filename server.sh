@@ -26,7 +26,16 @@ sudo ufw allow 80/tcp
 cd /usr/local/src
 [ -f noip-duc-linux.tar.gz ] || sudo wget http://www.no-ip.com/client/linux/noip-duc-linux.tar.gz
 [ -d no-ip-2.1.9 ] || sudo tar xzf noip-duc-linux.tar.gz
-cd noip-2.1.9-1/
-sudo make
-sudo make install
-sudo /usr/local/bin/noip2
+if [ -d noip-*/ ]
+then 
+	echo "noip already exist"
+else 
+	cd noip-*/
+	sudo make
+	sudo make install
+fi
+pgrep -x noip2 >/dev/null || sudo /usr/local/bin/noip2
+
+# setup automatic backup of the databases.
+sudo crontab -l 2> /dev/null || echo "0 3 * * * sh $PATHTOPROJECT/backupProjectDatabases.sh" | sudo crontab -
+sudo crontab -l | grep "0 3 \* \* \* sh $PATHTOPROJECT/backupProjectDatabases.sh" >/dev/null || sudo crontab -l | sed -e "\$a0 3 \* \* \* sh $PATHTOPROJECT/backupProjectDatabases.sh" | sudo crontab -
