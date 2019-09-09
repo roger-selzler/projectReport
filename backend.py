@@ -4,7 +4,7 @@ import itertools
 from flask_user import current_user
 import flask_bcrypt
 # from flask.ext.bcrypt import Bcrypt
-from main import app 
+# from main import app
 
 # import numpy as np
 
@@ -18,7 +18,7 @@ if resetDB == True:
 
 prjdb = client['prjMngRpt']
 dbUsers = client['projectReport']
-bcrypt = flask_bcrypt.Bcrypt(app)
+# bcrypt = flask_bcrypt.Bcrypt(app)
 
 # functions to deal with users 
 def isAdmin(username):
@@ -52,7 +52,7 @@ def deleteUser(username):
     if user != None:
         usersCollection.delete_one(dict(username=username))
 
-def createUser(firstname,lastname,email,password):
+def createUser(bcrypt,firstname,lastname,email,password):
     usersCollection = dbUsers.user 
     user = usersCollection.find_one(dict(username=firstname+lastname))
     if user == None:

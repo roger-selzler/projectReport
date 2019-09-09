@@ -26,36 +26,35 @@ class ConfigClass(object):
     #USER_EMAIL_SENDER_EMAIL = 'rogerse18@gmail.com'
     USER_REQUIRE_RETYPE_PASSWORD = False   # Simplify register form
 
-""" Flask application factory """
-# Setup Flask and load app.config
-app = Flask(__name__)
-app.config.from_object(__name__+'.ConfigClass')
-# Setup Flask-MongoEngine
-db = MongoEngine(app)
-
-
-# Define the User document.
-# NB: Make sure to add flask_user UserMixin !!!
-class User(db.Document, UserMixin):
-    active = db.BooleanField(default=True)
-    # User authentication information
-    #email = db.StringField(default='')
-    username = db.StringField(default='')
-    password = db.StringField()
-#        email_confirmed_at = db.
-    # User information
-    first_name = db.StringField(default='')
-    last_name = db.StringField(default='')
-    email = db.StringField(default='')
-    # Relationships
-    roles = db.ListField(db.StringField(), default=[])
-
-# Setup Flask-User and specify the User data-model
-user_manager = UserManager(app, db, User)
-
-def create_app(app):
+def create_app():
     
-    @app.route('/',methods=['GET','POST'])
+    """ Flask application factory """
+    # Setup Flask and load app.config
+    app1 = Flask('main')
+    app1.config.from_object('main'+'.ConfigClass')
+    # Setup Flask-MongoEngine
+    db = MongoEngine(app1)
+
+
+    # Define the User document.
+    # NB: Make sure to add flask_user UserMixin !!!
+    class User(db.Document, UserMixin):
+        active = db.BooleanField(default=True)
+        # User authentication information
+        #email = db.StringField(default='')
+        username = db.StringField(default='')
+        password = db.StringField()
+    #        email_confirmed_at = db.
+        # User information
+        first_name = db.StringField(default='')
+        last_name = db.StringField(default='')
+        email = db.StringField(default='')
+        # Relationships
+        roles = db.ListField(db.StringField(), default=[])
+
+    # Setup Flask-User and specify the User data-model
+    user_manager = UserManager(app1, db, User)
+    @app1.route('/',methods=['GET','POST'])
     def root_page():
         if current_user.is_authenticated:
             return redirect(url_for('homePage'))
@@ -71,14 +70,14 @@ def create_app(app):
 
             return redirect(url_for('user.login'))
 
-    @app.route('/Register') # TODO
+    @app1.route('/Register') # TODO
     def registerPage():
         return render_template('register.html')
 
         # return redirect('/Home')
 
     # The Members page is only accessible to authenticated users via the @login_required decorator
-    @app.route('/Home') # TODO
+    @app1.route('/Home') # TODO
     @login_required   
     def homePage():
         # print(current_user.username)
@@ -86,7 +85,7 @@ def create_app(app):
 
     
 
-    @app.route('/registerActivity',methods=['GET', 'POST'])
+    @app1.route('/registerActivity',methods=['GET', 'POST'])
     @login_required
     def registerActivityPage():
         activities = backend.getActivitiesByUsername(current_user.username)
@@ -107,13 +106,13 @@ def create_app(app):
             render_template('registerActivity2.html',activities=activities,isAdmin = backend.isAdmin(current_user.username))
         return render_template('registerActivity2.html',activities=activities,isAdmin = backend.isAdmin(current_user.username))
 
-    @app.route('/admin')
+    @app1.route('/admin')
     @login_required
     def adminPage():
         return redirect(url_for('viewGroupReportPage'))
         # return render_template('admin.html')
     
-    @app.route('/admin/createGroups',methods=['GET','POST'])
+    @app1.route('/admin/createGroups',methods=['GET','POST'])
     @login_required
     def createGroups():
         groups = backend.getGroups()
@@ -128,7 +127,7 @@ def create_app(app):
             groups = groups,
             isAdmin = backend.isAdmin(current_user.username))
 
-    @app.route('/admin/assignGroups',methods=['GET','POST'])
+    @app1.route('/admin/assignGroups',methods=['GET','POST'])
     @login_required
     def assignGroups():
         usernames = backend.getUsernames()
@@ -152,7 +151,7 @@ def create_app(app):
             users = users,groups=groups,
             isAdmin = backend.isAdmin(current_user.username))
 
-    @app.route('/admin/viewGroupReport',methods=['GET','POST'])
+    @app1.route('/admin/viewGroupReport',methods=['GET','POST'])
     @login_required
     @roles_required('admin')
     def viewGroupReportPage():
@@ -196,9 +195,9 @@ def create_app(app):
             summary=summary,
             isAdmin = backend.isAdmin(current_user.username))
 
-    return app
+    return app1
 
-app = create_app(app)
+app = create_app()
 # Start development web server
 if __name__=='__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
