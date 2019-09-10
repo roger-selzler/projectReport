@@ -27,7 +27,7 @@ def deleteUsers(a):
 def deleteAllUsersBut(username):
 	users = backend.getUser()
 	for user in users:
-		if user['username'] != username:
+		if user['username'] not in username:
 			backend.deleteUser(user['username'])
 
 def printUsernamesIDs(a):

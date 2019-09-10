@@ -41,8 +41,9 @@ def getUser():
 
 def printUsernames():
     users = getUser()
+    print("{:<20}{:<20}{:<40}{:<30}".format('First Name','Last Name','Email','Username'))
     for user in users:
-        print(user['username'])
+        print("{:<20}{:<20}{:<40}{:<30}".format(user['first_name'],user['last_name'],user['email'],user['username']))
 
 def setRolesUser(username,roles):
     usersCollection = dbUsers.user
@@ -66,6 +67,7 @@ def createUser(bcrypt,firstname,lastname,email,password):
         usersCollection.insert_one(dict(active=True,
             first_name=firstname,
             last_name=lastname,
+            email=email,
             password = bcrypt.generate_password_hash(password).decode('utf-8'),
             roles = [],
             username=re.sub('[^a-zA-Z]+','',firstname+lastname).lower()))
