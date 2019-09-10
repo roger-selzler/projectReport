@@ -239,11 +239,11 @@ def insertGroup(group):
 def getGroups():
     groups = prjdb.groups 
     groups = groups.find().sort("group")
-    print ('Available Groups:')
+    #print ('Available Groups:')
     g = []
     for i in groups:
         g.append(i['group'])
-        print(i['group'])
+        #print(i['group'])
     return g
 
 def getAssignedGroupUser(username):
@@ -270,8 +270,20 @@ def assignGroup(username,group):
 def listAssignedGroups():
     assignedGroups=prjdb.assignedGroups
     assignedGroups = assignedGroups.find().sort('username')
-    for i in assignedGroups:
-        print(i['username'] + ' ' + i['group'])
+    aGroups = [aGroups for aGroups in assignedGroups]
+    groups = getGroups()
+    for group in groups:
+        print(group)
+        for i in aGroups:
+            if group == i['group']:
+                print(i['username'])
+        print('')
+
+def printAssignedGroups():
+    assignedGroups = prjdb.assignedGroups
+    assignedGroups = assignedGroups.find().sort('group')
+    for assignedGroup in assignedGroups:
+        print(assignedGroup['group'] + ": " + assignedGroup['username'])
 
 def ProjectInfo(startDate):
     pinfo = prjdb.projectInfo
