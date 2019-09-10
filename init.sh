@@ -6,8 +6,9 @@ sudo apt-get -y install python-pip
 sudo pip install virtualenv
 sudo apt-get -y install virtualenv
 
-virtualenv ~/prjvenv
-source ~/prjvenv/bin/activate
+sudo virtualenv /prjvenv
+sudo chmod -R 777 /prjvenv
+source /prjvenv/bin/activate
 pip install flask flask-user Flask-MongoEngine numpy Flask-Security flask-bcrypt pandas xlrd
 
 
