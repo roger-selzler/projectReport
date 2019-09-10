@@ -9,8 +9,10 @@ sudo apt-get -y install virtualenv
 sudo virtualenv /prjvenv
 sudo chmod -R 777 /prjvenv
 source /prjvenv/bin/activate
-pip install flask flask-user Flask-MongoEngine numpy Flask-Security flask-bcrypt pandas xlrd
-
+pip install flask flask-user Flask-MongoEngine Flask-Security flask-bcrypt
+pip install numpy
+pip install pandas
+pip install xlrd
 
 
 # -- Install the mongoDB package

@@ -3,7 +3,8 @@ import datetime
 import itertools
 from flask_user import current_user
 import flask_bcrypt
-import re
+import re 
+from bson.objectid import ObjectId
 # from flask.ext.bcrypt import Bcrypt
 # from main import app
 
@@ -130,6 +131,17 @@ def getActivities():
         print (" " )
     return listOfActivities
 
+def deleteActivitiesFromUser(username):
+    activities = prjdb.activities
+    listOfActivities = activities.find(dict(author=username))
+    for activity in listOfActivities:
+        print(activity)
+        activities.delete_one(dict(_id=activity['_id']))
+
+def deleteActivitiesByID(id):
+    activities = prjdb.activities
+    activities.delete_one(dict(_id=ObjectId(id)))
+
 def getActivitiesByUsername(username):
     activities = prjdb.activities
     listOfActivities = activities.find(dict(author=username)).sort("date",-1)
@@ -162,7 +174,7 @@ def organizeActivityForReport(activities,config):
     pinfo = getProjectInfo();
     startDate = pinfo['startDate']
     seq =[activity['date'] for activity in activities]
-    weeks = [(seqN-startDate).days/7+1 for seqN in seq]
+    weeks = [int((seqN-startDate).days/7+1) for seqN in seq]
     uniqueWeeks = []
     organizedActivities = dict()
     for week in weeks:
@@ -170,7 +182,7 @@ def organizeActivityForReport(activities,config):
             uniqueWeeks.append(week)
     uniqueWeeks.sort(reverse=True)
     for uniqueWeek in uniqueWeeks:
-        for (week,activity) in itertools.izip(weeks,activities):
+        for (week,activity) in zip(weeks,activities):
             if week == uniqueWeek:
                 if 'week'+str(week) not in organizedActivities:
                     organizedActivities['week'+str(week)]=list()

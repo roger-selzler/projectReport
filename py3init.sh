@@ -10,7 +10,7 @@ sudo virtualenv -p python3 /prjvenv
 sudo chmod -R 777 /prjvenv
 source /prjvenv/bin/activate
 pip3 install flask flask-user Flask-MongoEngine numpy Flask-Security flask-bcrypt pandas xlrd
-
+pip3 install pymongo==3.4.0
 
 
 # -- Install the mongoDB package
