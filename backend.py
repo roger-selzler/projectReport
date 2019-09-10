@@ -46,11 +46,11 @@ def printUsernames():
 def setRolesUser(username,roles):
     usersCollection = dbUsers.user
     user = usersCollection.find_one(dict(username=username))
-    print user
+    print (user)
     if user != None:
         usersCollection.update_one(dict(_id=user['_id']),{"$set":dict(roles=roles)},upsert=False)
     user = usersCollection.find_one(dict(username=username))
-    print user
+    print (user)
 
 def deleteUser(username):
     usersCollection = dbUsers.user

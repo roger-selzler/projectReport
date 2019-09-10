@@ -5,7 +5,7 @@ PATHTOPROJECT=$(pwd)
 echo $PATHTOPROJECT
 cd /
 sudo apt-get install apache2
-sudo apt-get install libapache2-mod-wsgi
+sudo apt-get install libapache2-mod-wsgi-py3
 sudo a2enmod wsgi
 cd $PATHTOPROJECT
 [ -d "/var/www/sysc3010" ] || sudo mkdir /var/www/sysc3010

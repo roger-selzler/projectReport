@@ -167,8 +167,8 @@ def create_app():
         summary = backend.getSummaryReportDataByGroup(activities)
         activities = backend.organizeActivityForReport(activities,reportType)
         projectInfo = backend.getProjectInfo()
-        print projectInfo
-        print "creating viewGroupReportPage"
+        print (projectInfo)
+        print ("creating viewGroupReportPage")
         if request.method == 'POST':
             selectedGroup = request.form['selectedGroup']
             reportType = request.form['reportType']
@@ -176,7 +176,7 @@ def create_app():
             config = reportType
             summary = backend.getSummaryReportDataByGroup(activities)
             activities = backend.organizeActivityForReport(activities,config)
-            print "there was a post request in viewGroupReport",selectedGroup,reportType
+            print ("there was a post request in viewGroupReport",selectedGroup,reportType)
             return render_template( 'viewGroupReport.html',
                 activities = activities,
                 groups = groups,
