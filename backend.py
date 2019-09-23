@@ -243,6 +243,12 @@ def updateGroupActivity(username,group):
         print(act)
         activities.update_one(dict(_id=act['_id']),{"$set":dict(group=group)},upsert=False)
 
+def updateGroupActivityUndefined():
+    act = getActivities()
+    for a in act:
+        if a['group'] == '':
+            updateGroupActivity(a['author'],getAssignedGroupUser(a['author']))
+
 def insertGroup(group):
     groups = prjdb.groups
     grp = groups.find_one(dict(group=group))
