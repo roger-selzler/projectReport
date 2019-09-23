@@ -5,6 +5,7 @@ from flask_user import current_user
 import flask_bcrypt
 import re 
 from bson.objectid import ObjectId
+import math
 # from flask.ext.bcrypt import Bcrypt
 # from main import app
 
@@ -123,15 +124,18 @@ def insertActivityWithDate(author,activityName,task,hours,details,date):
 def getActivities():
     activities = prjdb.activities
     listOfActivities = activities.find().sort("date",-1)
+    lAct = []
     print('Activities')
     for i in listOfActivities:
+        lAct.append(i)
         if "author" in i:
             print(i["author"])
         if "group" in i:
             print(str(i['date']) + ' ' + i["group"])
             print(i['activity'])
         print (" " )
-    return listOfActivities
+#    return listOfActivities
+    return lAct
 
 def deleteActivitiesFromUser(username):
     activities = prjdb.activities
@@ -143,6 +147,17 @@ def deleteActivitiesFromUser(username):
 def deleteActivitiesByID(id):
     activities = prjdb.activities
     activities.delete_one(dict(_id=ObjectId(id)))
+
+def updateActivityOwner(fromUsername,toUsername):
+    activities = prjdb.activities 
+    listOfActivities = activities.find(dict(author=fromUsername))
+    for act in listOfActivities:
+        activities.update_one(dict(_id=act['_id']),{"$set":dict(author=toUsername)},upsert=False)
+
+def updateActivityHoursById(id,hours):
+    activities=prjdb.activities 
+    activities.update_one(dict(_id=ObjectId(id)),{"$set":dict(hours=hours)},upsert=False)
+#    activities.update_one(dict(_id=act['_id']),{"$set":dict(group=group)},upsert=False)
 
 def getActivitiesByUsername(username):
     activities = prjdb.activities
@@ -176,7 +191,7 @@ def organizeActivityForReport(activities,config):
     pinfo = getProjectInfo();
     startDate = pinfo['startDate']
     seq =[activity['date'] for activity in activities]
-    weeks = [int((seqN-startDate).days/7+1) for seqN in seq]
+    weeks = [math.floor((seqN-startDate).days/7+1) for seqN in seq]
     uniqueWeeks = []
     organizedActivities = dict()
     for week in weeks:
@@ -217,7 +232,6 @@ def getSummaryReportDataByGroup(activities):
         summary[activity['activity']]['hours'] += float(activity['hours'])
         summary['extraInfo']['hours'] += float(activity['hours'])
         summary['extraInfo'][activity['author']]['hours'] += float(activity['hours'])
-
     return summary
 
 def updateGroupActivity(username,group):
@@ -237,6 +251,12 @@ def insertGroup(group):
         print("Inserted group " + group + " with id " + str(group_id))
     else:
         print("Group " + group + " already exist")
+
+def deleteGroup(group):
+    groups = prjdb.groups 
+    grp = groups.find_one(dict(group=group))
+    if grp != None:
+        groups.delete_one(dict(_id=grp['_id']))
 
 def getGroups():
     groups = prjdb.groups 

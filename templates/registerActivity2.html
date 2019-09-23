@@ -26,8 +26,8 @@ src = "{{ url_for('static', filename = 'hello.js') }}" ></script>
 			<option value="Other">Other</option>
 		</select>
 		<input type="TEXT" name="activityOther" id="activityOther" style='display:none;' /></br>
-		<br>Task:<input type="TEXT" name="task" id="task"/></br>
-		<br>Hours:<input type="number" name="hours" id="hours" step=any></br>
+        <br>Task:<input type="TEXT" name="task" id="task" required/></br>
+		<br>Hours:<input type="number" name="hours" id="hours" step=any required></br>
 		<br>Details:</br>
 		<br><textarea rows="4" cols="50" name="details"></textarea></br>
 		<br><input type="submit" value="Submit"/></br>
