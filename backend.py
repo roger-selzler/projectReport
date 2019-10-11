@@ -27,10 +27,10 @@ dbUsers = client['projectReport']
 def isAdmin(username):
     roles = getUserRoles(username)
     if 'admin' in roles:
-        print(username + ' is admin')
+#        print(username + ' is admin')
         return True
     else:
-        print(username + ' is NOT admin')
+#        print(username + ' is NOT admin')
         return False
 
 def getUser():
@@ -49,11 +49,11 @@ def printUsernames():
 def setRolesUser(username,roles):
     usersCollection = dbUsers.user
     user = usersCollection.find_one(dict(username=username))
-    print (user)
+#    print (user)
     if user != None:
         usersCollection.update_one(dict(_id=user['_id']),{"$set":dict(roles=roles)},upsert=False)
-    user = usersCollection.find_one(dict(username=username))
-    print (user)
+#    user = usersCollection.find_one(dict(username=username))
+#    print (user)
 
 def deleteUser(username):
     usersCollection = dbUsers.user
@@ -87,8 +87,8 @@ def getUsernames():
     users = []
     for userX in usersCollection.find():
         users.append(userX['username'])
-    for userX in users:
-        print(userX)
+ #   for userX in users:
+ #       print(userX)
     return users
 
 # functions to deal with the activities
@@ -103,9 +103,9 @@ def insertActivity(author,activityName,task,hours,details):
             hours = hours,
             details = details,
             date = datetime.datetime.now())
-    print(activity)
+#    print(activity)
     post_id = activities.insert_one(activity).inserted_id
-    print(post_id)
+#    print(post_id)
 
 def insertActivityWithDate(author,activityName,task,hours,details,date):
     activities = prjdb.activities
@@ -125,15 +125,15 @@ def getActivities():
     activities = prjdb.activities
     listOfActivities = activities.find().sort("date",-1)
     lAct = []
-    print('Activities')
+#    print('Activities')
     for i in listOfActivities:
         lAct.append(i)
-        if "author" in i:
-            print(i["author"])
-        if "group" in i:
-            print(str(i['date']) + ' ' + i["group"])
-            print(i['activity'])
-        print (" " )
+#        if "author" in i:
+#            print(i["author"])
+#        if "group" in i:
+#            print(str(i['date']) + ' ' + i["group"])
+#            print(i['activity'])
+#        print (" " )
 #    return listOfActivities
     return lAct
 
@@ -141,7 +141,7 @@ def deleteActivitiesFromUser(username):
     activities = prjdb.activities
     listOfActivities = activities.find(dict(author=username))
     for activity in listOfActivities:
-        print(activity)
+#        print(activity)
         activities.delete_one(dict(_id=activity['_id']))
 
 def deleteActivitiesByID(id):
@@ -163,25 +163,25 @@ def getActivitiesByUsername(username):
     activities = prjdb.activities
     listOfActivities = activities.find(dict(author=username)).sort("date",-1)
     act = []
-    print('Activities by username')
+#    print('Activities by username')
     for i in listOfActivities:
         act.append(i)
-        if "author" in i:
-            print(i["author"])
-        if "group" in i:
-            print(str(i['date']) + ' ' + i["group"])
-            print(i['activity'])
-        print (" ")
+#        if "author" in i:
+#            print(i["author"])
+#        if "group" in i:
+#            print(str(i['date']) + ' ' + i["group"])
+#            print(i['activity'])
+#        print (" ")
     return act
 
 def getActivitiesByGroup(groupX):
     activities = prjdb.activities
     listOfActivities = activities.find(dict(group=groupX)).sort("date",-1)
     act = []
-    print("Group selected is: \"" + groupX +"\"")
-    print('Activities by group')
+#    print("Group selected is: \"" + groupX +"\"")
+#    print('Activities by group')
     for i in listOfActivities:
-        print("got activity")
+#        print("got activity")
         act.append(i)
     return act
 
@@ -237,10 +237,10 @@ def getSummaryReportDataByGroup(activities):
 def updateGroupActivity(username,group):
     activities = prjdb.activities
     listOfActivities = activities.find(dict(author=username))
-    print('Updating activity')
-    print(listOfActivities)
+ #   print('Updating activity')
+ #   print(listOfActivities)
     for act in listOfActivities:
-        print(act)
+ #       print(act)
         activities.update_one(dict(_id=act['_id']),{"$set":dict(group=group)},upsert=False)
 
 def updateGroupActivityUndefined():
@@ -254,9 +254,9 @@ def insertGroup(group):
     grp = groups.find_one(dict(group=group))
     if grp == None:
         group_id = groups.insert_one(dict(group=group))
-        print("Inserted group " + group + " with id " + str(group_id))
-    else:
-        print("Group " + group + " already exist")
+#        print("Inserted group " + group + " with id " + str(group_id))
+#    else:
+#        print("Group " + group + " already exist")
 
 def deleteGroup(group):
     groups = prjdb.groups 
@@ -277,11 +277,11 @@ def getGroups():
 def getAssignedGroupUser(username):
     assignGroups = prjdb.assignedGroups
     assignedGroup = assignGroups.find_one(dict(username=username))
-    print(assignedGroup)
+#    print(assignedGroup)
     if assignedGroup == None:
         return ''
     else:
-        print(assignedGroup['group'])
+#        print(assignedGroup['group'])
         return assignedGroup['group']
 
 def assignGroup(username,group):
@@ -293,7 +293,7 @@ def assignGroup(username,group):
         assignedGroups.update_one(dict(_id=aGrp['_id']),{"$set":dict(username=username,group=group)},upsert=False)
     aGrp = assignedGroups.find_one(dict(username=username))
     updateGroupActivity(username,group)
-    print(aGrp)
+#    print(aGrp)
 
 def listAssignedGroups():
     assignedGroups=prjdb.assignedGroups
