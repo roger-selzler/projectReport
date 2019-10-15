@@ -9,9 +9,28 @@ users = backend.getUser();
 def createReport(act,users):
     datestr = datetime.datetime.now().strftime("%Y_%d_%m_%H_%M")   
     f = open("report_" + datestr + ".txt","w+");
+    f.write(generalInfo(act,users))
     f.write(generateActivityHours(act))   
     f.write(generateUsersWithoutActivity(users))
     f.close();
+
+def generalInfo(act,users):
+    buf = io.StringIO()
+    buf.write("General informamtion:\n")
+    buf.write("Number of activities: {}\n".format(len(act)))
+    buf.write("Number of users: {}\n".format(len(users)))
+    groups=backend.getGroups()
+    buf.write("\n{:<12}{:<12}{:<12}\n".format("Group","Nr act","hours"))
+    for g in groups:
+        nact=0
+        hact=0
+        for a in act:
+            if a['group'] == g:
+                nact=nact+1
+                hact=hact+float(a['hours'])
+        buf.write("{:<12}{:<12}{:<12}\n".format(g,str(nact),str(hact)))
+#    print(buf.getvalue())
+    return buf.getvalue()
 
 def generateActivityHours(activities):
     buf = io.StringIO()
@@ -21,7 +40,7 @@ def generateActivityHours(activities):
             summ[a['activity']]=summ[a['activity']] + float(a['hours'])
         else:
             summ[a['activity']] = float(a['hours'])
-    buf.write("Summary of time spent per activity:\n")
+    buf.write("\n\nSummary of time spent per activity:\n")
     for s in sorted(summ,key=summ.get,reverse=True):
         buf.write("%s: %.2f\n" %(s,summ[s]))
     return buf.getvalue()
