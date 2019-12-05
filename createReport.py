@@ -2,21 +2,25 @@ import backend
 import datetime
 import collections
 import io 
+from bson import json_util
 
 act = backend.getActivities();
 users = backend.getUser();
 
 def createReport(act,users):
-    datestr = datetime.datetime.now().strftime("%Y_%d_%m_%H_%M")   
+    datestr = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M")   
     f = open("report_" + datestr + ".txt","w+");
     f.write(generalInfo(act,users))
     f.write(generateActivityHours(act))   
     f.write(generateUsersWithoutActivity(users))
     f.close();
+    f = open("jsonAct_" + datestr + ".json","w+");
+    f.write(json_util.dumps(act));
+    f.close();
 
 def generalInfo(act,users):
     buf = io.StringIO()
-    buf.write("General informamtion:\n")
+    buf.write("General information:\n")
     buf.write("Number of activities: {}\n".format(len(act)))
     buf.write("Number of users: {}\n".format(len(users)))
     groups=backend.getGroups()
